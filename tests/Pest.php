@@ -9,7 +9,21 @@
 | need to change it using the "uses()" function to bind a different classes or traits.
 |
 */
+
+use App\Domain\Deployment\DeploymentContext;
+use App\Models\ApplicationDeploymentQueue;
+use App\Services\Deployment\DeploymentProvider;
+use App\Services\Docker\DockerProvider;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class)
+    ->in('Integration');
+
+uses(RefreshDatabase::class)
+    ->in('Feature');
+
 uses(Tests\TestCase::class)->in('Feature');
+uses(Tests\TestCase::class)->in('Integration');
 
 /*
 |--------------------------------------------------------------------------
@@ -41,3 +55,20 @@ uses(Tests\TestCase::class)->in('Feature');
 // {
 //     // ..
 // }
+
+function getContextForApplicationDeployment(ApplicationDeploymentQueue $applicationDeploymentQueue): DeploymentContext
+{
+    // This could be improved, but for now it's fine
+    $dockerProvider = app(DockerProvider::class);
+    $deploymentProvider = app(DeploymentProvider::class);
+
+    return new DeploymentContext($applicationDeploymentQueue, $dockerProvider, $deploymentProvider);
+}
+
+function assertUrlStatus(string $url, int $statusCode): void
+{
+    $response = Http::get($url);
+
+    expect($response->status())
+        ->toBe($statusCode);
+}
