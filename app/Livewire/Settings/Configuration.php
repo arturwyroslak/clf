@@ -19,7 +19,7 @@ class Configuration extends Component
     public bool $is_dns_validation_enabled;
 
     // public bool $next_channel;
-    protected string $dynamic_config_path = '/data/coolify/proxy/dynamic';
+    protected string $dynamic_config_path;
 
     protected Server $server;
 
@@ -47,6 +47,7 @@ class Configuration extends Component
         $this->is_registration_enabled = $this->settings->is_registration_enabled;
         // $this->next_channel = $this->settings->next_channel;
         $this->is_dns_validation_enabled = $this->settings->is_dns_validation_enabled;
+        $this->dynamic_config_path = config('coolify.coolify_root_path').'/proxy/dynamic';
     }
 
     public function instantSave()
