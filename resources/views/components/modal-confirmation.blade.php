@@ -1,7 +1,7 @@
 @props([
-    'title' => 'Are you sure?',
+    'title' => null,
     'isErrorButton' => false,
-    'buttonTitle' => 'REWRITE THIS BUTTON TITLE PLEASSSSEEEE',
+    'buttonTitle' => 'Confirm Action',
     'buttonFullWidth' => false,
     'customButton' => null,
     'disabled' => false,
@@ -11,52 +11,22 @@
 <div x-data="{ modalOpen: false }" @keydown.escape.window="modalOpen = false" :class="{ 'z-40': modalOpen }"
     class="relative w-auto h-auto">
     @if ($customButton)
-        @if ($buttonFullWidth)
-            <x-forms.button @click="modalOpen=true" class="w-full">
-                {{ $customButton }}
-            </x-forms.button>
-        @else
-            <x-forms.button @click="modalOpen=true">
-                {{ $customButton }}
-            </x-forms.button>
-        @endif
+        <x-forms.button @click="modalOpen=true" class="{{ $buttonFullWidth ? 'w-full' : '' }}">
+            {{ $customButton }}
+        </x-forms.button>
     @else
         @if ($content)
             <div @click="modalOpen=true">
                 {{ $content }}
             </div>
         @else
-            @if ($disabled)
-                @if ($buttonFullWidth)
-                    <x-forms.button class="w-full" isError disabled wire:target>
-                        {{ $buttonTitle }}
-                    </x-forms.button>
-                @else
-                    <x-forms.button isError disabled wire:target>
-                        {{ $buttonTitle }}
-                    </x-forms.button>
-                @endif
-            @elseif ($isErrorButton)
-                @if ($buttonFullWidth)
-                    <x-forms.button class="w-full" isError @click="modalOpen=true">
-                        {{ $buttonTitle }}
-                    </x-forms.button>
-                @else
-                    <x-forms.button isError @click="modalOpen=true">
-                        {{ $buttonTitle }}
-                    </x-forms.button>
-                @endif
-            @else
-                @if ($buttonFullWidth)
-                    <x-forms.button @click="modalOpen=true" class="flex w-full gap-2" wire:target>
-                        {{ $buttonTitle }}
-                    </x-forms.button>
-                @else
-                    <x-forms.button @click="modalOpen=true" class="flex gap-2" wire:target>
-                        {{ $buttonTitle }}
-                    </x-forms.button>
-                @endif
-            @endif
+            <x-forms.button 
+                @click="modalOpen=true" 
+                class="{{ $buttonFullWidth ? 'w-full' : '' }} {{ $isErrorButton ? 'bg-red-500 hover:bg-red-600 text-white' : '' }}"
+                :disabled="$disabled"
+            >
+                {{ $buttonTitle }}
+            </x-forms.button>
         @endif
     @endif
     <template x-teleport="body">
@@ -75,53 +45,14 @@
                 class="relative w-full py-6 border rounded min-w-full lg:min-w-[36rem] max-w-fit bg-neutral-100 border-neutral-400 dark:bg-base px-7 dark:border-coolgray-300">
                 <div class="flex items-center justify-between pb-3">
                     <h3 class="text-2xl font-bold">{{ $title }}</h3>
-                    {{-- <button @click="modalOpen=false"
-                        class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 mt-5 mr-5 rounded-full dark:text-white hover:bg-coolgray-300">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    <button @click="modalOpen=false" class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
-                    </button> --}}
+                    </button>
                 </div>
                 <div class="relative w-auto pb-8">
                     {{ $slot }}
-                </div>
-                <div class="flex flex-row justify-end space-x-2">
-                    <x-forms.button @click="modalOpen=false"
-                        class="w-24 dark:bg-coolgray-200 dark:hover:bg-coolgray-300">Cancel
-                    </x-forms.button>
-                    <div class="flex-1"></div>
-                    @if ($attributes->whereStartsWith('wire:click')->first())
-                        @if ($isErrorButton)
-                            <x-forms.button @click="modalOpen=false" class="w-24" isError type="button"
-                                wire:click.prevent="{{ $attributes->get('wire:click') }}">Continue
-                            </x-forms.button>
-                        @else
-                            <x-forms.button @click="modalOpen=false" class="w-24" isHighlighted type="button"
-                                wire:click.prevent="{{ $attributes->get('wire:click') }}">Continue
-                            </x-forms.button>
-                        @endif
-                    @elseif ($attributes->whereStartsWith('@click')->first())
-                        @if ($isErrorButton)
-                            <x-forms.button class="w-24" isError type="button"
-                                @click="modalOpen=false;{{ $attributes->get('@click') }}">Continue
-                            </x-forms.button>
-                        @else
-                            <x-forms.button class="w-24" isHighlighted type="button"
-                                @click="modalOpen=false;{{ $attributes->get('@click') }}">Continue
-                            </x-forms.button>
-                        @endif
-                    @elseif ($action)
-                        @if ($isErrorButton)
-                            <x-forms.button @click="modalOpen=false" class="w-24" isError type="button"
-                                wire:click.prevent="{{ $action }}">Continue
-                            </x-forms.button>
-                        @else
-                            <x-forms.button @click="modalOpen=false" class="w-24" isHighlighted type="button"
-                                wire:click.prevent="{{ $action }}">Continue
-                            </x-forms.button>
-                        @endif
-                    @endif
                 </div>
             </div>
         </div>
