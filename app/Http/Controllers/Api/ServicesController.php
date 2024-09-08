@@ -29,6 +29,7 @@ class ServicesController extends Controller
         $service->makeHidden([
             'docker_compose_raw',
             'docker_compose',
+            'extra_fields',
         ]);
 
         return serializeApiResponse($service);
@@ -417,6 +418,7 @@ class ServicesController extends Controller
         }
 
         $service = $service->load(['applications', 'databases']);
+        $service->extra_fields = $service->extraFields();
 
         return response()->json($this->removeSensitiveData($service));
     }

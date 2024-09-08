@@ -34,6 +34,7 @@ use Visus\Cuid2\Cuid2;
         'created_at' => ['type' => 'string', 'description' => 'The date and time when the service was created.'],
         'updated_at' => ['type' => 'string', 'description' => 'The date and time when the service was last updated.'],
         'deleted_at' => ['type' => 'string', 'description' => 'The date and time when the service was deleted.'],
+        'extra_fields' => ['type' => 'string', 'description' => 'Content is very complex. Will be implemented later.'],
     ],
 )]
 class Service extends BaseModel
