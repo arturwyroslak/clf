@@ -349,7 +349,9 @@ if ! grep -qw "root@coolify" ~/.ssh/authorized_keys; then
     addSshKey
 fi
 
-bash /data/coolify/source/upgrade.sh "${LATEST_VERSION:-latest}" "${LATEST_HELPER_VERSION:-latest}"
+# Use the built Docker image
+docker-compose -f /data/coolify/source/docker-compose.yml pull
+docker-compose -f /data/coolify/source/docker-compose.yml up -d
 
 echo "Waiting for 20 seconds for Coolify to be ready..."
 
